@@ -49,6 +49,12 @@ A quick guide of how to install and use Apepe.
 
 <br>
 
+### 🖼️ Example
+
+<img src="https://i.imgur.com/jtGRCTQ.png">
+
+<br>
+
 ### 📚 To-Do
 
 - [ ] Support to .ipa files (iOS)
