@@ -59,7 +59,7 @@ A quick guide of how to install and use Apepe.
 
 - [ ] Support to .ipa files (iOS)
 - [ ] Detect certificate library used by the app 
-- [ ] Add argument to return list of possible SSL Pinning scripts
+- [x] Add argument to return list of possible SSL Pinning scripts
 - [ ] Common vulnerabilities check?
 
 <br>
