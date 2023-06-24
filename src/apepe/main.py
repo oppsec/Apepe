@@ -4,12 +4,17 @@ from pathlib import Path
 from zipfile import ZipFile
 
 from androguard.core.bytecodes.apk import APK
+from androguard.core.bytecodes.dvm import DalvikVMFormat
 
+from src.apepe.modules.suggest import suggest_sslpinning
 
-def checks(args: str) -> None:
+def perform_checks(apk_file, list_scripts) -> None:
     ''' This function is responsible to check if the APK file exists and if the extension is .apk '''
 
-    file_name: str = args.f
+    global args_list_scripts
+    args_list_scripts = list_scripts
+
+    file_name: str = apk_file
     check_if_file: bool = path.isfile(file_name)
     check_if_file_exists: bool = path.exists(file_name)
     check_extension: bool = file_name.endswith(".apk")
@@ -19,12 +24,11 @@ def checks(args: str) -> None:
         return True
     
     if not(check_extension):
-        print("[red][!] File extension is not [b].apk[/], please check your input[/]")
+        print("[red][!] File extension is not [b].apk[/], please check your file or input[/]")
         return True
 
     file_size: int = path.getsize(file_name)
-
-    print(f"[black][-] Checking {file_name}. File size is {file_size}[/]")
+    print(f"[black][-] Checking {file_name}. File size is [white]{file_size}[/][/]")
 
     extract_apk(file_name)
 
@@ -32,7 +36,7 @@ def checks(args: str) -> None:
 def extract_apk(file_name) -> None:
     ''' This function will create a folder called "apk-extracted" and extract the content from the apk file to that folder '''
 
-    normal_dir_name: str = "apk-extracted"
+    normal_dir_name: str = f"apk-extracted"
     current_dir = Path.cwd()
 
     print(f"[black][-] Creating {normal_dir_name} folder to extract the apk...[/]")
@@ -71,31 +75,37 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
 * Signed: [white]{package_signed}[/white]
     [/]''')
 
-    check_app_dev_lang(normal_dir_name)
+    check_app_dev_lang(normal_dir_name, apk_file)
 
 
-def check_app_dev_lang(normal_dir_name) -> None:
+def check_app_dev_lang(normal_dir_name, apk_file) -> None:
     ''' Detect the language that the app has been developed through shared object files  '''
     
     chdir(normal_dir_name)
-    current_dir = Path.cwd()
-    print(f"[black][-] Current directory: {current_dir}[/]")
+    print(f"\n[black][-] Extracting APK classes...[/]")
 
-    ''' Libs Apps '''
-    libflutter_file = [f"{current_dir}/lib/x86_64/libflutter.so", 'libflutter.so', 'Flutter']
-    libreact_file = [f"{current_dir}/lib/x86_64/libreact_config.so", 'libreact_config.so', 'React Native']
-    second_libreact_file = [f"{current_dir}/lib/x86_64/libreact_utils.so", 'libreact_utils.so', 'React Native']
+    dvm = DalvikVMFormat(apk_file.get_dex())
+    classes = dvm.get_classes()
 
-    libraries = [libflutter_file, libreact_file, second_libreact_file]
+    for apk_classes in classes:
+        class_name = apk_classes.get_name()
 
-    for library in libraries:
-        lib_path = library[0]
-        lib_file_name = library[1]
-        app_lang = library[2]
+        flutter_class = ['Lio/flutter/', 'Flutter']
+        react_class = ['Lcom/facebook/react/', 'React']
+        java_class = ['Landroidx/work/Worker', 'Java']
+        supported_langs = [flutter_class, react_class, java_class]
 
-        if(path.exists(lib_path) == True):
-            print(f"[green][+] [b]{lib_file_name}[/b] found. App is probably built with [b]{app_lang}[/b][/]")
-        else:
-            print(f"[black][-] [b]{lib_file_name}[/b] not found. Skipping...[/]")
+        for default_classes in supported_langs:
+            default_class_name = default_classes[0]
+            app_lang = default_classes[1]
+
+            if(default_class_name in class_name):
+                print(f"[green][+] App is probably developed with [b]{app_lang}[/b][/]")
+            
+                if(args_list_scripts):
+                    print(suggest_sslpinning(app_lang))
+                return True
+            else:
+                pass
 
     print("\n[yellow][!] Done, exiting... [/]")
