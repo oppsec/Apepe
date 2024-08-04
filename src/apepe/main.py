@@ -106,7 +106,7 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
     # Get APK Libraries
     app_libraries = apk_file.get_libraries()
     if len(app_libraries) != 0:
-        console.print("\n[[green]+[/]] List of libraries(s):", highlight=False)´
+        console.print("\n[[green]+[/]] List of libraries(s):", highlight=False)
 
         for library in app_libraries:
             console.print(f" \\_ {library}")
