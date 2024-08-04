@@ -28,7 +28,7 @@ A quick guide of how to install and use Apepe.
 
 ```shell
 1. git clone https://github.com/oppsec/Apepe.git
-2. pip install -r requirements.txt
+2. pip install -r requirements.txt --break-system-packages
 3. python3 main -f <apk-file.apk>
 ```
 
@@ -37,14 +37,13 @@ A quick guide of how to install and use Apepe.
 ### ⚙️ Pre-requisites
 - [Python](https://www.python.org/downloads/) installed on your machine
 - The .apk from the target mobile app
+- Androguard lib on 3.3.5 version
 
 <br>
 
 ### ✨ Features
-- Detect mobile app development lanague
-- Information gathering
-- Extremely fast
-- Low RAM and CPU usage
+- Try to detect target app development language
+- List the activies, permissions, services, and libraries used by the app
 - Made in Python
 
 <br>
