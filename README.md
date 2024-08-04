@@ -50,7 +50,7 @@ A quick guide of how to install and use Apepe.
 
 ### 🖼️ Example
 
-<img src="https://i.imgur.com/iL2q2nQ.png">
+<img src="https://i.imgur.com/pY9ea23.png">
 
 <br>
 
