@@ -10,6 +10,7 @@ from androguard.core.bytecodes.dvm import DalvikVMFormat
 
 from src.apepe.modules.suggest import suggest_sslpinning
 
+
 def perform_checks(apk_file, list_scripts) -> None:
     ''' This function is responsible to check if the APK file exists and if the extension is .apk '''
 
@@ -36,21 +37,21 @@ def perform_checks(apk_file, list_scripts) -> None:
 
 
 def extract_apk(file_name) -> None:
-    ''' This function will create a folder called "apk-extracted" and extract the content from the apk file to that folder '''
+    ''' This function will create a folder with the same name as of APK file and extract the content from the apk file to that folder '''
 
-    normal_dir_name: str = f"apk-extracted"
+    normal_dir_name: str = f"{file_name.rstrip('.apk')}_results" # Stripping .apk extension and adding _results to the apk
     current_dir = Path.cwd()
 
     console.print(f"[cyan][-][/] Creating {normal_dir_name} folder to extract the apk...", highlight=False)
 
     if not(current_dir.joinpath(normal_dir_name).exists()):
-        mkdir(normal_dir_name)
+        Path(normal_dir_name).mkdir(parents=True, exist_ok=True)
         console.print(f"[green][+][/] Created {normal_dir_name} folder")
 
         with ZipFile(file_name, mode="r") as archive:
             archive.extractall(path=normal_dir_name)
 
-        console.print(f"[green][+][/] Extracting information from files on apk-extracted folder")
+        console.print(f"[green][+][/] Extracting information from files on {normal_dir_name} folder")
         apk_info_extraction(file_name, normal_dir_name)
 
     else:
@@ -69,14 +70,20 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
     package_name = apk_file.get_package()
     app_name = apk_file.get_app_name()
     package_signature = apk_file.get_signature_name()
-    package_signed: bool = apk_file.is_signed()
+    # package_signed: bool = apk_file.is_signed()
+    package_signature_V1 : bool = apk_file.is_signed()
+    package_signature_V3 : bool = apk_file.is_signed_v2()
+    package_signature_V2 : bool = apk_file.is_signed_v3()
 
     console.print("\n[[green]+[/]] APK Standard Information:")
 
     console.print(f'''[green] \\_ Package Name: [white]{package_name}[/white]
  \\_ App Name: [white]{app_name}[/white]
+ \\_ Is App Signed: [white]{package_signature_V1}[/white]
+    |_ Signature Version 1: [white]{package_signature_V1}[/white]
+    |_ Signature Version 2: [white]{package_signature_V2}[/white]
+    |_ Signature Version 3: [white]{package_signature_V3}[/white]
  \\_ Package Signature: [white]{package_signature}[/white]
- \\_ Is App Signed: [white]{package_signed}[/white]
     [/]''')
 
 
