@@ -16,7 +16,6 @@ def main() -> None:
     apk_file = args.f
     list_scripts = args.l
     apk_file = str(Path(apk_file).resolve())
-    print(apk_file)
 
     perform_checks(apk_file, list_scripts)
 
