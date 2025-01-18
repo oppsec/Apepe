@@ -68,7 +68,12 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
 
     # Get APK package name, app name, package signature and if it's signed
     package_name = apk_file.get_package()
-    app_name = apk_file.get_app_name()
+
+    try:
+        app_name = apk_file.get_app_name()
+    except:
+        app_name = package_name
+
     package_signature = apk_file.get_signature_name()
     # package_signed: bool = apk_file.is_signed()
     package_signature_V1 : bool = apk_file.is_signed()
