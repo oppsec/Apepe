@@ -1,3 +1,11 @@
+## v1.3 [25/01/2025]
+- Changed color scheme
+- Changed banner
+- Added 'deeplink' module
+- Fixed bugs
+- Updated Androguard library
+- Improved code
+
 ## v1.2 [04/08/2024]
 - Added functions to get APK's:
     - Activies

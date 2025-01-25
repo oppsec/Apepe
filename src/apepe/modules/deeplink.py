@@ -120,10 +120,10 @@ def scraper(extraction_path: str, apk_file: str) -> None:
 
     extraction_path: Path to the extracted content directory
     """
-    console.print(f"\n[yellow][!][/] Searching for [yellow]deeplinks[/] [yellow]({extraction_path}[/])")
-    path = Path(extraction_path)
 
-    # Get the results variable content and print the result
+    path = Path(extraction_path)
+    console.print(f"\n[yellow][!][/] Searching for [yellow]deeplinks[/] [yellow]({path}[/])")
+
     console.print(android_manifest_handler(apk_file), highlight=False)
 
     extensions = ['.dex', '.json']
