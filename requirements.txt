@@ -1,2 +1,2 @@
 rich>=13.4.2
-androguard==3.3.5
+androguard=>=4.1.2

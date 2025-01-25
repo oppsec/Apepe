@@ -5,17 +5,27 @@ from os import path, mkdir, chdir
 from pathlib import Path
 from zipfile import ZipFile
 
-from androguard.core.bytecodes.apk import APK
-from androguard.core.bytecodes.dvm import DalvikVMFormat
+from androguard.core.apk import APK
+from androguard.core.dex import DEX
 
 from src.apepe.modules.suggest import suggest_sslpinning
+from src.apepe.modules.deeplink import scraper
+
+from loguru import logger
+logger.remove(0)
 
 
-def perform_checks(apk_file, list_scripts) -> None:
-    ''' This function is responsible to check if the APK file exists and if the extension is .apk '''
+def perform_checks(apk_file, list_scripts, deeplink) -> None:
+    """
+    This function is responsible to check if the APK file exists and
+    if the extension is .apk
+    """
 
     global args_list_scripts
     args_list_scripts = list_scripts
+
+    global args_deeplink
+    args_deeplink = deeplink
 
     file_name: str = apk_file
     check_if_file: bool = path.isfile(file_name)
@@ -37,9 +47,12 @@ def perform_checks(apk_file, list_scripts) -> None:
 
 
 def extract_apk(file_name) -> None:
-    ''' This function will create a folder with the same name as of APK file and extract the content from the apk file to that folder '''
+    """
+    This function will create a folder with the same name as of APK file and
+    extract the content from the apk file to that folder 
+    """
 
-    normal_dir_name: str = f"{file_name.rstrip('.apk')}_results" # Stripping .apk extension and adding _results to the apk
+    normal_dir_name: str = f"{file_name.rstrip('.apk')}_results"
     current_dir = Path.cwd()
 
     console.print(f"[cyan][-][/] Creating {normal_dir_name} folder to extract the apk...", highlight=False)
@@ -60,7 +73,10 @@ def extract_apk(file_name) -> None:
     
 
 def apk_info_extraction(file_name, normal_dir_name) -> None:
-    ''' Use androguard to extract apk relevation informations such as package, name, activities... '''
+    """
+    Uses androguard's library functions to extract APK relevant information such as:
+    Package Name, App Name, Activies, Permissions...
+    """
 
     console.print(f"\n[cyan][-][/] Using androguard to collect APK information")
 
@@ -74,8 +90,7 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
     except:
         app_name = package_name
 
-    package_signature = apk_file.get_signature_name()
-    # package_signed: bool = apk_file.is_signed()
+    package_signature: str = apk_file.get_signature_name()
     package_signature_V1 : bool = apk_file.is_signed()
     package_signature_V3 : bool = apk_file.is_signed_v2()
     package_signature_V2 : bool = apk_file.is_signed_v3()
@@ -98,10 +113,10 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
         console.print("[[green]+[/]] List of activities:")
 
         main_activity = apk_file.get_main_activity()
-        console.print(f" \\_ [green]Main Activity[/]: {main_activity}")
+        console.print(f" \\_ [green]* Main Activity[/]: {main_activity}")
 
         for activity_name in app_activies:
-            console.print(f" \\_ {activity_name}")
+            console.print(f"  \\_ {activity_name}")
     else:
         console.print("[red] No activies found [/]")
 
@@ -118,12 +133,12 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
     # Get APK Libraries
     app_libraries = apk_file.get_libraries()
     if len(app_libraries) != 0:
-        console.print("\n[[green]+[/]] List of libraries(s):", highlight=False)
+        console.print("\n[[green]+[/]] List of librarie(s):", highlight=False)
 
         for library in app_libraries:
             console.print(f" \\_ {library}")
     else:
-        console.print("\n[red] No library(es) found [/]", highlight=False)
+        console.print("\n[red] No librarie(s) found [/]", highlight=False)
 
     # Get APK Services
     app_services = apk_file.get_services()
@@ -139,12 +154,14 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
 
 
 def check_app_dev_lang(normal_dir_name, apk_file) -> None:
-    ''' Detect the language that the app has been developed through shared object files  '''
+    """
+    Try to detect the app development language through classes name
+    """
     
     chdir(normal_dir_name)
     console.print(f"\n[cyan][-][/] Extracting APK classes...", highlight=False)
 
-    dvm = DalvikVMFormat(apk_file.get_dex())
+    dvm = DEX(apk_file.get_dex())
     classes = dvm.get_classes()
 
     for apk_classes in classes:
@@ -164,6 +181,9 @@ def check_app_dev_lang(normal_dir_name, apk_file) -> None:
             
                 if(args_list_scripts):
                     console.print(suggest_sslpinning(app_lang))
+                
+                if(args_deeplink):
+                    scraper(normal_dir_name, apk_file)
 
                 return True
             

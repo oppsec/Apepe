@@ -1,5 +1,3 @@
-from rich import print
-
 urls = [
     ['https://github.com/horangi-cyops/flutter-ssl-pinning-bypass', 'Flutter'],
     ['https://gist.github.com/owen800q/9c5ee9392f45dbcf44c5b434cdecf647', 'Flutter'],
