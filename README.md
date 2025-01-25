@@ -37,7 +37,7 @@ A quick guide of how to install and use Apepe.
 ### ⚙️ Pre-requisites
 - [Python](https://www.python.org/downloads/) installed on your machine
 - APK file from the targeted app
-- Androguard lib >= 4.1.2
+- Androguard library >= 4.1.2
 
 <br>
 

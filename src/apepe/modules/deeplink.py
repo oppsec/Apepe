@@ -32,11 +32,11 @@ def dex_handler(file_path: Path) -> list:
             ]
 
     except Exception as error:
-        console.print(f"[[red]![/]] Failed to read .dex file [yellow]{file_path}[/]: {error}")
+        console.print(f"[red][!][/] Failed to read DEX file [yellow]{file_path}[/]: {error}")
         return []
 
     if len(results) == 0:
-        return f"[[red]![/]] No results for [yellow]{file_path}[/]\n"
+        return f"[red][!][/] No deeplinks found in [yellow]{file_path}[/]\n"
     else:   
         return "\n".join(results) + "\n"
 
@@ -64,11 +64,11 @@ def json_handler(file_path: Path) -> list:
                         results.append(obj)
 
     except Exception as error:
-        console.print(f"[[red]![/]] Failed to read .json file [yellow]{file_path}[/]: {error}")
+        console.print(f"[red][!][/] Failed to read JSON file [yellow]{file_path}[/]: {error}")
         return []
     
     if len(results) == 0:
-        return f"[[red]![/]] No results for [yellow]{file_path}[/]\n"
+        return f"[red][!][/] No deeplinks found in [yellow]{file_path}[/]\n"
     else:   
         return "\n".join(results) + "\n"
     
@@ -78,7 +78,7 @@ def android_manifest_handler(apk_file: str) -> None:
     Extract readable intent-filter (scheme, host and path) from AndroidManifest.xml
     """
 
-    console.print("[[green]+[/]] AndroidManifest.xml's content:")
+    console.print("[green][+][/] AndroidManifest.xml:")
     seen = set()
     results = []
 
@@ -87,7 +87,7 @@ def android_manifest_handler(apk_file: str) -> None:
         manifest_content: str = tostring(manifest, pretty_print=True, encoding="unicode")
         
         if len(manifest_content) == 0:
-            console.print(f"[[red]![/]] AndroidManifest.xml content is 0 - [yellow]{apk_file}[/]")
+            console.print(f"[red][!][/] AndroidManifest.xml content is 0 - [yellow]{apk_file}[/]")
 
         else:
             for intent_filter in manifest.findall(".//intent-filter"):
@@ -111,13 +111,13 @@ def android_manifest_handler(apk_file: str) -> None:
                             results.append(formatted_url)
 
         if len(results) == 0:
-            return f"[[red]![/]] No results for [yellow]{apk_file}[/]\n"
+            return f"[red][!][/] No results for [yellow]{apk_file}[/]\n"
         else:   
             return "\n".join(results) + "\n"
 
 
     except Exception as error:
-        console.print(f"[[red]![/]] Failed to read AndroidManifest.xml file [yellow]{apk_file}[/]: {error}")
+        console.print(f"[red][!][/] Failed to read AndroidManifest.xml file [yellow]{apk_file}[/]: {error}")
         return []
 
 
@@ -128,7 +128,7 @@ def scraper(extraction_path: str, apk_file: str) -> None:
 
     extraction_path: Path to the extracted content directory
     """
-    console.print(f"\n[[cyan]![/]] Searching for [yellow]deeplinks[/] ([yellow]{extraction_path}[/])")
+    console.print(f"\n[yellow][!][/] Searching for [yellow]deeplinks[/] [yellow]({extraction_path}[/])")
     path = Path(extraction_path)
 
     # Get the results variable content and print the result
@@ -141,12 +141,10 @@ def scraper(extraction_path: str, apk_file: str) -> None:
 
         for file_path in file_paths:
             file_path_str = str(file_path)
-            console.print(f"[[yellow]*[/]] Checking file: [yellow]{file_path_str}[/]")
+            console.print(f"[yellow][!][/] Checking file: [yellow]{file_path_str}[/]")
 
             if(extension == '.dex'):
-                console.print("[[green]+[/]] DEX files content:")
                 console.print(dex_handler(file_path), highlight=False)
 
             if(extension == '.json'):
-                console.print("[[green]+[/]] JSONs files content:")
                 console.print(json_handler(file_path), highlight=False)

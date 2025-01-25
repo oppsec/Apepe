@@ -41,7 +41,7 @@ def perform_checks(apk_file, list_scripts, deeplink) -> None:
         return True
 
     file_size: int = path.getsize(file_name)
-    console.print(f"[cyan][-][/] Checking {file_name}. File size is {file_size} bytes")
+    console.print(f"[yellow][!][/] Checking [yellow]{file_name}[/]. File size is [yellow]{file_size}[/] bytes", highlight=False)
 
     extract_apk(file_name)
 
@@ -55,16 +55,16 @@ def extract_apk(file_name) -> None:
     normal_dir_name: str = f"{file_name.rstrip('.apk')}_results"
     current_dir = Path.cwd()
 
-    console.print(f"[cyan][-][/] Creating {normal_dir_name} folder to extract the apk...", highlight=False)
+    console.print(f"[yellow][!][/] Creating [yellow]{normal_dir_name}[/] folder to extract the apk", highlight=False)
 
     if not(current_dir.joinpath(normal_dir_name).exists()):
         Path(normal_dir_name).mkdir(parents=True, exist_ok=True)
-        console.print(f"[green][+][/] Created {normal_dir_name} folder")
+        console.print(f"[green][+][/] Created [yellow]{normal_dir_name}[/] folder", highlight=False)
 
         with ZipFile(file_name, mode="r") as archive:
             archive.extractall(path=normal_dir_name)
 
-        console.print(f"[green][+][/] Extracting information from files on {normal_dir_name} folder")
+        console.print(f"[yellow][!][/] Extracting information from files on [yellow]{normal_dir_name}[/] folder", highlight=False)
         apk_info_extraction(file_name, normal_dir_name)
 
     else:
@@ -77,8 +77,6 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
     Uses androguard's library functions to extract APK relevant information such as:
     Package Name, App Name, Activies, Permissions...
     """
-
-    console.print(f"\n[cyan][-][/] Using androguard to collect APK information")
 
     apk_file = APK(file_name)
 
@@ -104,13 +102,13 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
     |_ Signature Version 2: [white]{package_signature_V2}[/white]
     |_ Signature Version 3: [white]{package_signature_V3}[/white]
  \\_ Package Signature: [white]{package_signature}[/white]
-    [/]''')
+    [/]''', highlight=False)
 
 
     # Get APK Activies
     app_activies = apk_file.get_activities()
     if len(app_activies) != 0:
-        console.print("[[green]+[/]] List of activities:")
+        console.print("[green][+][/] List of activities:")
 
         main_activity = apk_file.get_main_activity()
         console.print(f" \\_ [green]* Main Activity[/]: {main_activity}")
@@ -118,37 +116,37 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
         for activity_name in app_activies:
             console.print(f"  \\_ {activity_name}")
     else:
-        console.print("[red] No activies found [/]")
+        console.print("[red][!][/] No activies found [/]")
 
     # Get APK Permissions
     app_permissions = apk_file.get_details_permissions()
     if len(app_permissions) != 0:
-        console.print("\n[[green]+[/]] List of permission(s):", highlight=False)
+        console.print("\n[green][+][/] List of permission(s):", highlight=False)
 
         for permission in app_permissions:
             console.print(f" \\_ {permission}")
     else:
-        console.print("\n[red] No permission(s) found [/]", highlight=False)
+        console.print("\n[red][!][/] No permission(s) found [/]", highlight=False)
 
     # Get APK Libraries
     app_libraries = apk_file.get_libraries()
     if len(app_libraries) != 0:
-        console.print("\n[[green]+[/]] List of librarie(s):", highlight=False)
+        console.print("\n[green][+][/] List of librarie(s):", highlight=False)
 
         for library in app_libraries:
             console.print(f" \\_ {library}")
     else:
-        console.print("\n[red] No librarie(s) found [/]", highlight=False)
+        console.print("\n[red][!][/] No librarie(s) found [/]", highlight=False)
 
     # Get APK Services
     app_services = apk_file.get_services()
     if len(app_services) != 0:
-        console.print("\n[[green]+[/]] List of service(s):", highlight=False)
+        console.print("\n[green][+][/] List of service(s):", highlight=False)
 
         for service in app_services:
             console.print(f" \\_ {service}")
     else:
-        console.print("\n[red] No service(s) found [/]", highlight=False)
+        console.print("\n[red][!][/] No service(s) found [/]", highlight=False)
 
     check_app_dev_lang(normal_dir_name, apk_file)
 
@@ -159,35 +157,40 @@ def check_app_dev_lang(normal_dir_name, apk_file) -> None:
     """
     
     chdir(normal_dir_name)
-    console.print(f"\n[cyan][-][/] Extracting APK classes...", highlight=False)
+    console.print(f"\n[yellow][!][/] Extracting APK classes", highlight=False)
 
-    dvm = DEX(apk_file.get_dex())
-    classes = dvm.get_classes()
+    try:
+        dvm = DEX(apk_file.get_dex())
+        classes = dvm.get_classes()
 
-    for apk_classes in classes:
-        class_name = apk_classes.get_name()
+        for apk_classes in classes:
+            class_name = apk_classes.get_name()
 
-        flutter_class = ['Lio/flutter/', 'Flutter']
-        react_class = ['Lcom/facebook/react/', 'React']
-        java_class = ['Landroidx/work/Worker', 'Java']
-        supported_langs = [flutter_class, react_class, java_class]
+            flutter_class = ['Lio/flutter/', 'Flutter']
+            react_class = ['Lcom/facebook/react/', 'React']
+            java_class = ['Landroidx/work/Worker', 'Java']
+            supported_langs = [flutter_class, react_class, java_class]
 
-        for default_classes in supported_langs:
-            default_class_name = default_classes[0]
-            app_lang = default_classes[1]
+            for default_classes in supported_langs:
+                default_class_name = default_classes[0]
+                app_lang = default_classes[1]
 
-            if(default_class_name in class_name):
-                console.print(f"[green][+][/] App is probably developed with [b]{app_lang}[/b]")
-            
-                if(args_list_scripts):
-                    console.print(suggest_sslpinning(app_lang))
+                if(default_class_name in class_name):
+                    console.print(f"[green][+][/] App is probably developed with [b]{app_lang}[/b]")
                 
-                if(args_deeplink):
-                    scraper(normal_dir_name, apk_file)
+                    if(args_list_scripts):
+                        console.print(suggest_sslpinning(app_lang))
+                    
+                    if(args_deeplink):
+                        scraper(normal_dir_name, apk_file)
 
-                return True
-            
-            else:
-                pass
+                    return True
+                
+                else:
+                    pass
+
+    except Exception as error:
+        console.print(f"[red][!][/] Error in [b]check_app_dev_lang[/] function: {error}")
+        return
 
     console.print("[yellow][!][/] Finished!")

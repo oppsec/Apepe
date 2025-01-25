@@ -1,4 +1,5 @@
-from rich import print
+from rich.console import Console
+console = Console()
 
 def get_banner() -> str:
     '''
@@ -6,11 +7,11 @@ def get_banner() -> str:
     '''
 
     banner = '''
-
-   db    88""Yb 888888 88""Yb 888888 
-  dPYb   88__dP 88__   88__dP 88__    - APK Analyzer by oppsec
- dP__Yb  88"""  88""   88"""  88""    - v1.3
-dP""""Yb 88     888888 88     888888
+ _____           
+|  _  |___ ___ ___ ___ 
+|     | . | -_| . | -_| - APK Analyzer v1.3
+|__|__|  _|___|  _|___|   by @oppsec
+      |_|     |_|      
     '''
 
-    print(f"[bold yellow]{banner}[/]")
+    console.print(f"[bright_white]{banner}[/]", highlight=False)
