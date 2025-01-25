@@ -36,15 +36,16 @@ A quick guide of how to install and use Apepe.
 
 ### ⚙️ Pre-requisites
 - [Python](https://www.python.org/downloads/) installed on your machine
-- The .apk from the target mobile app
-- Androguard lib on 3.3.5 version
+- APK file from the targeted app
+- Androguard lib >= 4.1.2
 
 <br>
 
 ### ✨ Features
-- Try to detect target app development language
 - List the activies, permissions, services, and libraries used by the app
-- Made in Python
+- Identify the app development language based on classes name
+- Suggest SSL Pinnings bypass with the `-l` flag
+- Find deeplinks in DEX, JSONs files and AndroidManifest.xml with the `-d` flag
 
 <br>
 
