@@ -9,7 +9,7 @@ def get_banner() -> str:
 
    db    88""Yb 888888 88""Yb 888888 
   dPYb   88__dP 88__   88__dP 88__    - APK Analyzer by oppsec
- dP__Yb  88"""  88""   88"""  88""    - v1.2
+ dP__Yb  88"""  88""   88"""  88""    - v1.3
 dP""""Yb 88     888888 88     888888
     '''
 
