@@ -79,8 +79,9 @@ def android_manifest_handler(apk_file: str) -> None:
     """
 
     console.print("[green][+][/] AndroidManifest.xml:")
-    seen = set()
     results = []
+
+    seen = set()
 
     try:
         manifest = APK.get_android_manifest_xml(apk_file)
@@ -98,23 +99,14 @@ def android_manifest_handler(apk_file: str) -> None:
                     host = data_tag.get("{http://schemas.android.com/apk/res/android}host", "")
                     path = data_tag.get("{http://schemas.android.com/apk/res/android}path", "")
 
-                    if scheme and host and path:
-                        formatted_url = f"{scheme}://{host}{path}"
-                        if formatted_url not in seen:
-                            seen.add(formatted_url)
-                            results.append(formatted_url)
-
-                    elif scheme and host:
-                        formatted_url = f"{scheme}://{host}"
-                        if formatted_url not in seen:
-                            seen.add(formatted_url)
-                            results.append(formatted_url)
+                    formatted_url = f"{scheme}://{host}{path}" if scheme and host and path else f"{scheme}://{host}"
+                    if formatted_url not in seen:
+                        results.append(formatted_url)
 
         if len(results) == 0:
             return f"[red][!][/] No results for [yellow]{apk_file}[/]\n"
         else:   
             return "\n".join(results) + "\n"
-
 
     except Exception as error:
         console.print(f"[red][!][/] Failed to read AndroidManifest.xml file [yellow]{apk_file}[/]: {error}")
