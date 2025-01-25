@@ -18,7 +18,7 @@
 ___
 
 ### 🕵️ What is Apepe?
-🕵️ **Apepe** is a Python tool developed to help pentesters and red teamers to easily get information from the target app. This tool will extract basic informations as the package name, if the app is signed and the development language...
+🕵️ **Apepe** is a project developed to help to capture informations from a Android app through his APK file. It can be used to extract the content, get app settings, suggest SSL Pinning bypass based on the app detected language, extract deeplinks from AndroidManifest.xml, JSONs and DEX files.
 
 <br>
 
@@ -29,7 +29,7 @@ A quick guide of how to install and use Apepe.
 ```shell
 1. git clone https://github.com/oppsec/Apepe.git
 2. pip install -r requirements.txt --break-system-packages
-3. python3 main -f <apk-file.apk>
+3. python3 main -h
 ```
 
 <br>
@@ -49,18 +49,9 @@ A quick guide of how to install and use Apepe.
 
 <br>
 
-### 🖼️ Example
+### 🖼️ Preview
 
-<img src="https://i.imgur.com/pY9ea23.png">
-
-<br>
-
-### 📚 To-Do
-
-- [ ] Support to .ipa files (iOS)
-- [ ] Detect certificate library used by the app 
-- [x] Add argument to return list of possible SSL Pinning scripts
-- [ ] Common vulnerabilities check?
+<img src="https://i.imgur.com/UAnF9k1.png" width=800>
 
 <br>
 
