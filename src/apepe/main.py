@@ -129,27 +129,36 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
         else:
             console.print("\n[red][!][/] No permission(s) found", highlight=False)
     except:
+        console.print("\n[red][!][/] Impossible to list permission(s)", highlight=False)
         pass
 
     # Get APK Libraries
-    app_libraries = apk_file.get_libraries()
-    if len(app_libraries) != 0:
-        console.print("\n[green][+][/] List of librarie(s):", highlight=False)
+    try:
+        app_libraries = apk_file.get_libraries()
+        if len(app_libraries) != 0:
+            console.print("\n[green][+][/] List of library(es):", highlight=False)
 
-        for library in app_libraries:
-            console.print(f" \\_ {library}")
-    else:
-        console.print("\n[red][!][/] No librarie(s) found", highlight=False)
+            for library in app_libraries:
+                console.print(f" \\_ {library}")
+        else:
+            console.print("\n[red][!][/] No librarie(s) found", highlight=False)
+    except:
+        console.print("\n[red][!][/] Impossible to list library(es)", highlight=False)
+        pass
 
     # Get APK Services
-    app_services = apk_file.get_services()
-    if len(app_services) != 0:
-        console.print("\n[green][+][/] List of service(s):", highlight=False)
+    try:
+        app_services = apk_file.get_services()
+        if len(app_services) != 0:
+            console.print("\n[green][+][/] List of service(s):", highlight=False)
 
-        for service in app_services:
-            console.print(f" \\_ {service}")
-    else:
-        console.print("\n[red][!][/] No service(s) found", highlight=False)
+            for service in app_services:
+                console.print(f" \\_ {service}")
+        else:
+            console.print("\n[red][!][/] No service(s) found", highlight=False)
+    except:
+        console.print("\n[red][!][/] Impossible to list service(es)", highlight=False)
+        pass
 
     check_app_dev_lang(normal_dir_name, apk_file)
 
