@@ -17,9 +17,8 @@ def main() -> None:
     parser.add_argument('-d', help='Enumerate deeplinks', required=False, action='store_true')
     args = parser.parse_args()
 
-    apk_file = args.f
+    apk_file = str(Path(args.f).resolve())
     list_scripts = args.l
-    apk_file = str(Path(apk_file).resolve())
     deeplink = args.d
 
     perform_checks(apk_file, list_scripts, deeplink)

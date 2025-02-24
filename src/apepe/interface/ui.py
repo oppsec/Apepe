@@ -9,7 +9,7 @@ def get_banner() -> str:
     banner = '''
  _____           
 |  _  |___ ___ ___ ___ 
-|     | . | -_| . | -_| - APK Analyzer v1.3
+|     | . | -_| . | -_| - Mobile app analyzer v1.4
 |__|__|  _|___|  _|___|   by @oppsec
       |_|     |_|      
     '''
