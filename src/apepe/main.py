@@ -81,7 +81,6 @@ def extract_apk(file_name) -> None:
     except (OSError, BadZipFile) as error:
         console.print(f"[red][!][/] Error processing APK: {error}")
 
-    
 
 def apk_info_extraction(file_name, normal_dir_name) -> None:
     """
@@ -90,6 +89,7 @@ def apk_info_extraction(file_name, normal_dir_name) -> None:
     """
 
     apk_file = APK(file_name)
+    console.print(f"[green][+][/] Target: {apk_file.get_package()}")
 
     console.print("\n[green][+][/] App signature(s):", highlight=False)
     package_signature_V1 : bool = apk_file.is_signed_v1()
