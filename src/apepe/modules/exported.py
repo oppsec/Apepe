@@ -16,12 +16,9 @@ def exported(target) -> None:
             name = element.get("{http://schemas.android.com/apk/res/android}name")
             exported = element.get("{http://schemas.android.com/apk/res/android}exported")
 
-            package_name = target.get_package()
-
-            if name.startswith(package_name):
-                if exported is None:
-                    has_intent_filter = element.find('.//intent-filter') is not None
-                    exported = 'True' if has_intent_filter else 'False'
+            if exported is None:
+                has_intent_filter = element.find('.//intent-filter') is not None
+                exported = 'True' if has_intent_filter else 'False'
 
                 color = "green" if exported == 'true' else 'red'
                 console.print(f'  \\_ {endpoint.capitalize()}: [yellow]{name}[/] - Exported: [{color}]{exported}[/]')
